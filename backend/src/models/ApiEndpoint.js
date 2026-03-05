@@ -193,7 +193,7 @@ class ApiEndpointModel {
     }
 
     if (search) {
-      query += ' AND (e.name LIKE ? OR e.endpoint_id LIKE ? OR e.description LIKE ?)';
+      query += ' AND (e.name ILIKE ? OR e.endpoint_id ILIKE ? OR e.description ILIKE ?)';
       const searchParam = `%${search}%`;
       params.push(searchParam, searchParam, searchParam);
     }
@@ -269,7 +269,7 @@ class ApiEndpointModel {
 
       const result = await db.execute(`
         UPDATE api_endpoints
-        SET ${setClause.join(', ')}, updated_at = datetime('now')
+        SET ${setClause.join(', ')}, updated_at = NOW()
         WHERE id = ?
       `, values);
 

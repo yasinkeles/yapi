@@ -253,7 +253,7 @@ class ApiKeyService {
     try {
       await db.execute(`
         UPDATE api_keys
-        SET last_used_at = datetime('now')
+        SET last_used_at = NOW()
         WHERE id = ?
       `, [keyId]);
     } catch (error) {
@@ -271,7 +271,7 @@ class ApiKeyService {
     try {
       const result = await db.execute(`
         UPDATE api_keys
-        SET is_active = 0, revoked_at = datetime('now')
+        SET is_active = 0, revoked_at = NOW()
         WHERE id = ?
       `, [keyId]);
 
