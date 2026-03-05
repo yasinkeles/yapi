@@ -9,11 +9,13 @@ echo.
 echo Yerel Ag IP Adresiniz: %localIp%
 echo.
 
+echo PostgreSQL: 192.168.0.61:5432/yapi
+echo.
 echo [1/2] Starting Backend...
-start cmd /k "cd backend && npm run dev"
+start cmd /k "cd c:\api\backend && npm run dev"
 
 echo [2/2] Starting Frontend...
-start cmd /k "cd frontend && npm run dev"
+start cmd /k "cd c:\api\frontend && npm run dev"
 
 echo.
 echo Cihazlardan erisim icin:

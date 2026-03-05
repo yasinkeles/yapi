@@ -139,7 +139,7 @@ class JWTService {
         JOIN users u ON rt.user_id = u.id
         WHERE rt.token_hash = ?
           AND rt.revoked_at IS NULL
-          AND rt.expires_at > datetime('now')
+          AND rt.expires_at > NOW()
       `, [tokenHash]);
 
       if (!result) {
@@ -203,7 +203,7 @@ class JWTService {
 
       const result = await db.execute(`
         UPDATE refresh_tokens
-        SET revoked_at = datetime('now')
+        SET revoked_at = NOW()
         WHERE token_hash = ?
       `, [tokenHash]);
 
@@ -225,7 +225,7 @@ class JWTService {
     try {
       const result = await db.execute(`
         UPDATE refresh_tokens
-        SET revoked_at = datetime('now')
+        SET revoked_at = NOW()
         WHERE user_id = ?
           AND revoked_at IS NULL
       `, [userId]);
@@ -247,7 +247,7 @@ class JWTService {
     try {
       const result = await db.execute(`
         DELETE FROM refresh_tokens
-        WHERE expires_at < datetime('now')
+        WHERE expires_at < NOW()
           OR revoked_at IS NOT NULL
       `);
 

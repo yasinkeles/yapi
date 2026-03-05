@@ -11,8 +11,14 @@ const config = {
   port: parseInt(process.env.PORT, 10) || 3000,
   host: process.env.HOST || '0.0.0.0',
 
-  // Database
-  sqlitePath: process.env.SQLITE_PATH || './data/app.db',
+  // PostgreSQL Database
+  db: {
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT, 10) || 5432,
+    database: process.env.DB_NAME || 'postgres',
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || '',
+  },
 
   // JWT
   jwt: {
@@ -30,16 +36,13 @@ const config = {
 
   // Rate Limiting
   rateLimit: {
-    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 3600000, // 1 hour
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 3600000,
     maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 1000,
-    adminWindowMs: parseInt(process.env.ADMIN_RATE_LIMIT_WINDOW_MS, 10) || 900000, // 15 min
+    adminWindowMs: parseInt(process.env.ADMIN_RATE_LIMIT_WINDOW_MS, 10) || 900000,
     adminMaxRequests: parseInt(process.env.ADMIN_RATE_LIMIT_MAX_REQUESTS, 10) || 100
   },
 
   // CORS
-  // CORS
-  // In development: default to true (allow all) if not set
-  // In production: default to false (block all) if not set - REQUIRES explicit config
   corsOrigin: process.env.CORS_ORIGIN || (process.env.NODE_ENV === 'production' ? false : true),
 
   // Logging
@@ -70,7 +73,6 @@ const validateConfig = () => {
     );
   }
 
-  // Validate encryption key length (should be strong enough)
   if (config.encryption.key.length < 32) {
     throw new Error('ENCRYPTION_KEY must be at least 32 characters long');
   }
@@ -80,7 +82,6 @@ const validateConfig = () => {
   }
 };
 
-// Only validate in non-test environments
 if (!config.isTest) {
   validateConfig();
 }

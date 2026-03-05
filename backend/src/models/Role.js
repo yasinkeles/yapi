@@ -125,7 +125,7 @@ class RoleModel {
 
       await db.execute(`
         UPDATE roles
-        SET ${setClause.join(', ')}, updated_at = datetime('now')
+        SET ${setClause.join(', ')}, updated_at = NOW()
         WHERE id = ?
       `, values);
 

@@ -192,7 +192,7 @@ class ApiKeyModel {
         SELECT COUNT(*) as count
         FROM api_keys
         WHERE is_active = 1
-          AND (expires_at IS NULL OR expires_at > datetime('now'))
+          AND (expires_at IS NULL OR expires_at > NOW())
       `;
       const params = [];
 

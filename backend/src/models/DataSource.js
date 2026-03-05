@@ -244,7 +244,7 @@ class DataSourceModel {
 
       const result = await db.execute(`
         UPDATE data_sources
-        SET ${setClause.join(', ')}, updated_at = datetime('now')
+        SET ${setClause.join(', ')}, updated_at = NOW()
         WHERE id = ?
       `, values);
 

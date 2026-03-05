@@ -321,7 +321,7 @@ class QueryExecutorService {
           SUM(rows_affected) as total_rows_affected
         FROM request_logs
         WHERE endpoint_id = ?
-          AND created_at > datetime('now', '-' || ? || ' days')
+          AND created_at > (NOW() - (? * INTERVAL '1 day'))
       `, [endpointId, days]);
 
       // Requests over time (daily)
@@ -332,7 +332,7 @@ class QueryExecutorService {
           AVG(response_time_ms) as avg_time
         FROM request_logs
         WHERE endpoint_id = ?
-          AND created_at > datetime('now', '-' || ? || ' days')
+          AND created_at > (NOW() - (? * INTERVAL '1 day'))
         GROUP BY DATE(created_at)
         ORDER BY date
       `, [endpointId, days]);
@@ -345,7 +345,7 @@ class QueryExecutorService {
         FROM request_logs
         WHERE endpoint_id = ?
           AND error_message IS NOT NULL
-          AND created_at > datetime('now', '-' || ? || ' days')
+          AND created_at > (NOW() - (? * INTERVAL '1 day'))
         GROUP BY error_message
         ORDER BY count DESC
         LIMIT 10
@@ -413,7 +413,7 @@ class QueryExecutorService {
           SUM(CASE WHEN response_status >= 400 THEN 1 ELSE 0 END) as error_count,
           SUM(CASE WHEN response_status >= 400 THEN 1 ELSE 0 END) * 100.0 / COUNT(*) as error_rate
         FROM request_logs
-        WHERE created_at > datetime('now', '-' || ? || ' days')${endpointFilter}
+        WHERE created_at > (NOW() - (? * INTERVAL '1 day'))${endpointFilter}
       `, params);
 
       // Top endpoints
@@ -423,7 +423,7 @@ class QueryExecutorService {
           COUNT(*) as request_count,
           AVG(response_time_ms) as avg_time
         FROM request_logs
-        WHERE created_at > datetime('now', '-' || ? || ' days')${endpointFilter}
+        WHERE created_at > (NOW() - (? * INTERVAL '1 day'))${endpointFilter}
         GROUP BY endpoint_id
         ORDER BY request_count DESC
         LIMIT 10
@@ -436,7 +436,7 @@ class QueryExecutorService {
           COUNT(*) as count,
           AVG(response_time_ms) as avg_time
         FROM request_logs
-        WHERE created_at > datetime('now', '-' || ? || ' days')${endpointFilter}
+        WHERE created_at > (NOW() - (? * INTERVAL '1 day'))${endpointFilter}
         GROUP BY DATE(created_at)
         ORDER BY date
       `, params);
