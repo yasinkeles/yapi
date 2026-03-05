@@ -1,0 +1,417 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark theme colors */
+    --color-dark-950: #0a0a0a;
+    --color-dark-900: #171717;
+    --color-dark-800: #262626;
+    --color-dark-700: #404040;
+
+    /* Light theme colors - off-white tones */
+    --color-light-50: #fafaf9;
+    --color-light-100: #f5f5f4;
+    --color-light-200: #e7e5e4;
+    --color-light-300: #d6d3d1;
+  }
+
+  /* Dark theme (default) */
+  body {
+    @apply bg-black text-slate-100 font-sans antialiased transition-colors duration-300;
+    background-color: var(--color-dark-950);
+  }
+
+  /* Light theme */
+  .light body {
+    @apply text-slate-900;
+    background-color: #ffffff;
+  }
+}
+
+@layer components {
+
+  /* Cards */
+  .card {
+    @apply border rounded-xl p-6 shadow-lg transition-colors duration-300;
+    background-color: var(--color-dark-900);
+    border-color: var(--color-dark-800);
+  }
+
+  .light .card {
+    background-color: white;
+    border-color: var(--color-light-200);
+  }
+
+  /* Tables */
+  .table {
+    @apply w-full text-left border-collapse;
+  }
+
+  .table th {
+    @apply px-4 py-3 text-slate-400 font-medium text-sm w-auto;
+  }
+
+  .table td {
+    @apply px-4 py-3 text-slate-300 transition-colors duration-300;
+    border-top: 1px solid var(--color-dark-800);
+  }
+
+  .light .table th {
+    @apply text-slate-600;
+  }
+
+  .light .table td {
+    @apply text-slate-700;
+    border-top: 1px solid var(--color-light-200);
+  }
+
+  .table tr:hover td {
+    background-color: rgba(38, 38, 38, 0.5);
+  }
+
+  .light .table tr:hover td {
+    background-color: rgba(245, 245, 244, 0.8);
+  }
+
+  /* Buttons */
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 inline-flex items-center justify-center gap-2;
+  }
+
+  .btn-primary {
+    @apply bg-teal-700 hover:bg-teal-600 text-white shadow-sm shadow-teal-900/10 border border-transparent;
+  }
+
+  .btn-secondary {
+    @apply bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700;
+  }
+
+  /* Inputs */
+  .input {
+    @apply border text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-700 focus:border-transparent outline-none transition-all;
+    background-color: var(--color-dark-900);
+    border-color: var(--color-dark-700);
+  }
+
+  .light .input {
+    @apply text-slate-900;
+    background-color: white;
+    border-color: var(--color-light-300);
+  }
+
+  .light .btn-secondary {
+    @apply bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--color-dark-950);
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-full;
+  background-color: var(--color-dark-800);
+  border: 2px solid var(--color-dark-950);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-dark-700);
+}
+
+/* Utility classes for dark theme */
+.bg-dark-950 {
+  background-color: var(--color-dark-950);
+}
+
+.bg-dark-900 {
+  background-color: var(--color-dark-900);
+}
+
+.bg-dark-800 {
+  background-color: var(--color-dark-800);
+}
+
+.bg-dark-700 {
+  background-color: var(--color-dark-700);
+}
+
+.border-dark-800 {
+  border-color: var(--color-dark-800);
+}
+
+.border-dark-700 {
+  border-color: var(--color-dark-700);
+}
+
+.hover\:bg-dark-800:hover {
+  background-color: var(--color-dark-800);
+}
+
+.hover\:bg-dark-700:hover {
+  background-color: var(--color-dark-700);
+}
+
+/* Light theme - Custom Scrollbar */
+.light ::-webkit-scrollbar-track {
+  background-color: var(--color-light-50);
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background-color: var(--color-light-300);
+  border: 2px solid var(--color-light-50);
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-light-200);
+}
+
+/* Light theme - Utility classes */
+/* Force stronger background contrast */
+.light .bg-dark-950 {
+  background-color: #f3f4f6;
+  /* gray-100 */
+}
+
+.light .bg-dark-900 {
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  /* Add shadow for depth */
+}
+
+.light .bg-dark-800 {
+  background-color: #e5e7eb;
+  /* gray-200 */
+}
+
+.light .bg-dark-700 {
+  background-color: #d1d5db;
+  /* gray-300 */
+}
+
+/* Force stronger borders */
+.light .border-dark-800,
+.light .border-dark-700 {
+  border-color: #e5e7eb;
+  /* gray-200 */
+}
+
+/* Hover states with better contrast */
+.light .hover\:bg-dark-800:hover {
+  background-color: #f3f4f6;
+  /* gray-100 */
+}
+
+.light .hover\:bg-dark-700:hover {
+  background-color: #e5e7eb;
+  /* gray-200 */
+}
+
+/* Light theme - Text colors - High Contrast */
+.light .text-slate-100 {
+  @apply text-gray-900;
+  /* Almost black */
+}
+
+.light .text-slate-200 {
+  @apply text-gray-800;
+}
+
+.light .text-slate-300 {
+  @apply text-gray-700;
+}
+
+.light .text-slate-400 {
+  @apply text-gray-600;
+}
+
+/* Card and Content Typography */
+.light .card {
+  @apply border-gray-200 shadow-sm transition-all duration-300;
+}
+
+.light .card:hover {
+  @apply shadow-md border-gray-300;
+}
+
+.light .card .text-white {
+  color: #111827;
+  /* gray-900 */
+  font-weight: 500;
+  /* font-medium */
+}
+
+.light h1,
+.light h2,
+.light h3,
+.light h4,
+.light h5,
+.light h6 {
+  @apply text-gray-900 font-bold tracking-tight;
+}
+
+/* Global text contrast fix */
+.light .text-white {
+  color: #111827 !important;
+  /* gray-900 */
+}
+
+/* Keep white text on primary actions */
+.light .btn-primary {
+  @apply font-semibold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5;
+  color: #ffffff;
+  background-color: #0d9488;
+  /* teal-600 */
+}
+
+.light .btn-primary:hover {
+  background-color: #0f766e;
+  /* teal-700 */
+}
+
+/* Ensure text inside buttons stays white */
+.light .bg-teal-700 *,
+.light .bg-teal-600 *,
+.light .btn-primary * {
+  color: #ffffff !important;
+}
+
+/* Secondary Buttons */
+.light .btn-secondary {
+  @apply bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400 shadow-sm;
+}
+
+/* Inputs */
+.light .input {
+  @apply bg-white text-gray-900 border-gray-300 focus:border-teal-500 focus:ring-teal-500 placeholder-gray-400;
+}
+
+/* Sidebar/Menu Contrast */
+.light .text-slate-400 {
+  color: #4b5563;
+  /* gray-600 */
+}
+
+.light .hover\:text-slate-200:hover {
+  color: #111827 !important;
+  /* gray-900 */
+  font-weight: 600;
+}
+
+.light .hover\:text-white:hover {
+  color: #000000 !important;
+}
+
+/* Active links */
+.light .hover\:text-teal-400:hover,
+.light .hover\:text-teal-500:hover,
+.light .text-teal-400 {
+  color: #0d9488 !important;
+  /* teal-600 */
+  font-weight: 700;
+}
+
+/* Danger actions */
+.light .hover\:text-red-400:hover {
+  color: #ef4444 !important;
+  /* red-500 */
+}
+
+/* Status Badges */
+.status-badge {
+  @apply px-2 py-1 text-xs rounded-full border inline-block text-center min-w-[3.5rem];
+}
+
+/* Dark Mode (Default) */
+.status-active {
+  background-color: rgba(19, 78, 74, 0.4);
+  /* teal-900/40 */
+  color: #2dd4bf;
+  /* teal-400 */
+  border-color: rgba(19, 78, 74, 0.5);
+  /* teal-900/50 */
+}
+
+.status-inactive {
+  background-color: rgba(127, 29, 29, 0.4);
+  /* red-900/40 */
+  color: #f87171;
+  /* red-400 */
+  border-color: rgba(127, 29, 29, 0.5);
+  /* red-900/50 */
+}
+
+/* Light Mode overrides */
+.light .status-active {
+  background-color: #ccfbf1;
+  /* teal-100 */
+  color: #115e59;
+  /* teal-800 */
+  border-color: #99f6e4;
+  /* teal-200 */
+  font-weight: 600;
+}
+
+
+.light .status-inactive {
+  background-color: #fee2e2;
+  /* red-100 */
+  color: #991b1b;
+  /* red-800 */
+  border-color: #fca5a5;
+  /* red-200 */
+  font-weight: 600;
+}
+
+/* Light Theme Text Readability Fixes */
+.light .text-teal-300 {
+  color: #4b5563 !important;
+  /* gray-600 - much more readable than light teal on white */
+}
+
+/* For code blocks in tip boxes */
+.light .text-teal-200 {
+  color: #115e59 !important;
+  /* teal-800 - dark teal for code text */
+}
+
+/* Tip box background fix for light mode */
+.light .bg-dark-800\/10,
+.light .bg-dark-800\/30 {
+  background-color: #f0f9ff !important;
+  /* sky-50 - very light blue/gray background */
+  border-color: #e0f2fe !important;
+}
+
+
+.light .bg-dark-800\/30 {
+  background-color: #e5e7eb !important;
+  /* gray-200 for code background */
+}
+
+/* Fix Button Contrast in Light Mode */
+.light .btn-primary {
+  background-color: #0d9488 !important;
+  /* teal-600 */
+  color: #ffffff !important;
+}
+
+.light .btn-primary:hover {
+  background-color: #0f766e !important;
+  /* teal-700 */
+}
+
+/* Ensure secondary text is dark in light mode */
+.light .btn-secondary {
+  background-color: #ffffff;
+  color: #374151 !important;
+  /* gray-700 */
+  border-color: #d1d5db;
+}

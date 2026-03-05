@@ -1,0 +1,358 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║                    Yapi PLATFORM                                          ║
+║                    Kurulum Talimatları                                     ║
+║                                                                            ║
+║                    Geliştirici: YASİN KELEŞ (Yapi)                        ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════════
+  HIZLI KURULUM (ÖNERİLEN)
+═══════════════════════════════════════════════════════════════════════════
+
+┌─ LINUX/UNIX SUNUCU ─────────────────────────────────────────────────────┐
+│                                                                          │
+│  1. Projeyi sunucuya kopyalayın                                         │
+│     scp -r api/ user@server:/home/user/                                 │
+│                                                                          │
+│  2. Sunucuya bağlanın                                                    │
+│     ssh user@server                                                      │
+│                                                                          │
+│  3. Proje klasörüne gidin                                                │
+│     cd /home/user/api                                                    │
+│                                                                          │
+│  4. Kurulum scriptini çalıştırın                                         │
+│     cd install                                                           │
+│     chmod +x install.sh                                                  │
+│     sudo ./install.sh                                                    │
+│                                                                          │
+│  5. Onay verin                                                           │
+│     Are you sure you want to continue? (yes/no): yes                     │
+│                                                                          │
+│  6. Nginx yapılandırması (opsiyonel)                                     │
+│     Do you want to configure Nginx? (y/n): y                             │
+│     Enter your domain name: api.example.com                              │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+┌─ WINDOWS SUNUCU ────────────────────────────────────────────────────────┐
+│                                                                          │
+│  1. Projeyi sunucuya kopyalayın                                         │
+│     (Dosya gezgini veya RDP ile)                                        │
+│                                                                          │
+│  2. Proje klasörüne gidin                                                │
+│     cd C:\Users\YourUser\api                                             │
+│                                                                          │
+│  3. Kurulum scriptini çalıştırın                                         │
+│     cd install                                                           │
+│     install.bat                                                          │
+│                                                                          │
+│  4. Onay verin                                                           │
+│     Are you sure you want to continue? (yes/no): yes                     │
+│                                                                          │
+│  5. Kurulum tamamlanana kadar bekleyin                                   │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════
+  KURULUM SONRASI ADIMLAR (ÖNEMLİ!)
+═══════════════════════════════════════════════════════════════════════════
+
+┌─ 1. GÜVENLİK AYARLARI ──────────────────────────────────────────────────┐
+│                                                                          │
+│  a) JWT Secret'ı değiştirin:                                            │
+│     • Dosya: backend/.env                                                │
+│     • Satır: JWT_SECRET=CHANGE_THIS_TO_A_SECURE_RANDOM_STRING...        │
+│     • Yeni değer: En az 32 karakter, rastgele string                    │
+│                                                                          │
+│     Güvenli secret oluşturma:                                            │
+│     Linux/Mac:  openssl rand -base64 32                                  │
+│     Windows:    [Convert]::ToBase64String((1..32|%{Get-Random -Max 256}))│
+│                                                                          │
+│  b) CORS ayarlarını güncelleyin:                                         │
+│     • Dosya: backend/.env                                                │
+│     • Satır: CORS_ORIGIN=http://localhost:5173                          │
+│     • Yeni değer: https://yourdomain.com,https://api.yourdomain.com     │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+┌─ 2. DEFAULT ŞİFREYİ ÖĞRENME ────────────────────────────────────────────┐
+│                                                                          │
+│  Linux/Mac:                                                              │
+│    cat backend/logs/init.log                                             │
+│                                                                          │
+│  Windows:                                                                │
+│    type backend\logs\init.log                                            │
+│                                                                          │
+│  Çıktıda şunu arayın:                                                    │
+│    Default admin user created:                                           │
+│    Username: admin                                                       │
+│    Password: [otomatik-oluşturulan-şifre]                               │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+┌─ 3. UYGULAMAYA ERİŞİM ──────────────────────────────────────────────────┐
+│                                                                          │
+│  Backend API:                                                            │
+│    http://sunucu-ip:3000                                                 │
+│                                                                          │
+│  Admin Panel:                                                            │
+│    http://sunucu-ip (Nginx yapılandırıldıysa)                           │
+│    veya frontend/dist/index.html dosyasını tarayıcıda açın              │
+│                                                                          │
+│  Health Check:                                                           │
+│    http://sunucu-ip:3000/health                                          │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+┌─ 4. İLK GİRİŞ VE ŞİFRE DEĞİŞTİRME ─────────────────────────────────────┐
+│                                                                          │
+│  1. Admin panele giriş yapın (yukarıdaki default credentials ile)       │
+│  2. Sağ üstteki "Profile" butonuna tıklayın                              │
+│  3. "Change Password" bölümünden şifrenizi değiştirin                    │
+│  4. Yeni şifrenizle tekrar giriş yapın                                   │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════
+  PM2 YÖNETİM KOMUTLARI
+═══════════════════════════════════════════════════════════════════════════
+
+  Durumu kontrol et:
+    pm2 status
+
+  Logları görüntüle:
+    pm2 logs yapi-backend
+
+  Uygulamayı yeniden başlat:
+    pm2 restart yapi-backend
+
+  Uygulamayı durdur:
+    pm2 stop yapi-backend
+
+  Kaynak kullanımını izle:
+    pm2 monit
+
+  Detaylı bilgi:
+    pm2 show yapi-backend
+
+
+═══════════════════════════════════════════════════════════════════════════
+  DIŞA AKTARMA VE TAŞIMA (Export / Packaging)
+═══════════════════════════════════════════════════════════════════════════
+
+  Uygulamayı başka bir sunucuya taşımak için paketlemek isterseniz:
+
+  Windows:
+    cd exports
+    export.bat
+
+  Linux/Mac:
+    cd exports
+    chmod +x export.sh
+    ./export.sh
+
+  Bu script size iki seçenek sunar:
+  1. Full Data: Tüm veritabanı (endpointler, kullanıcılar, ayarlar) ile paketler.
+  2. Clean Setup: Sadece kodları paketler, veritabanını dahil etmez.
+
+  Sonuç olarak 'exports/' klasörü altında bir paket oluşur.
+
+
+═══════════════════════════════════════════════════════════════════════════
+  HTTPS KURULUMU (Linux - Let's Encrypt)
+═══════════════════════════════════════════════════════════════════════════
+
+  1. Certbot kurulumu:
+     sudo apt-get install certbot python3-certbot-nginx
+
+  2. SSL sertifikası al:
+     sudo certbot --nginx -d yourdomain.com
+
+  3. Otomatik yenileme test et:
+     sudo certbot renew --dry-run
+
+
+═══════════════════════════════════════════════════════════════════════════
+  GELİŞTİRME (Development)
+═══════════════════════════════════════════════════════════════════════════
+
+  Her iki servisi aynı anda başlatmak için ana dizinde:
+
+  Windows:
+    start-dev.bat
+
+  Linux/Mac:
+    chmod +x start-dev.sh
+    ./start-dev.sh
+
+
+═══════════════════════════════════════════════════════════════════════════
+  MANUEL KURULUM (Script kullanmadan)
+═══════════════════════════════════════════════════════════════════════════
+
+┌─ BACKEND ───────────────────────────────────────────────────────────────┐
+│                                                                          │
+│  cd backend                                                              │
+│  npm install                                                             │
+│  cp .env.example .env                                                    │
+│  # .env dosyasını düzenleyin                                             │
+│  node src/database/init.js                                               │
+│  npm start                                                               │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+┌─ FRONTEND ──────────────────────────────────────────────────────────────┐
+│                                                                          │
+│  cd frontend                                                             │
+│  npm install                                                             │
+│  npm run dev          # Development için                                 │
+│  npm run build        # Production için                                  │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════
+  SORUN GİDERME
+═══════════════════════════════════════════════════════════════════════════
+
+┌─ Port zaten kullanımda ────────────────────────────────────────────────┐
+│                                                                          │
+│  Linux/Mac:                                                              │
+│    lsof -i :3000                                                         │
+│    kill -9 [PID]                                                         │
+│                                                                          │
+│  Windows:                                                                │
+│    netstat -ano | findstr :3000                                          │
+│    taskkill /PID [PID] /F                                                │
+│                                                                          │
+│  veya backend/.env dosyasında PORT değerini değiştirin                  │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+┌─ PM2 başlamıyor ───────────────────────────────────────────────────────┐
+│                                                                          │
+│  Logları kontrol edin:                                                   │
+│    pm2 logs yapi-backend --lines 100                              │
+│                                                                          │
+│  Sıfırdan başlatın:                                                      │
+│    pm2 delete yapi-backend                                        │
+│    pm2 start ecosystem.config.js                                         │
+│    pm2 save                                                              │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+┌─ Database hataları ─────────────────────────────────────────────────────┐
+│                                                                          │
+│  Database'i yeniden başlat:                                              │
+│    cd backend                                                            │
+│    node src/database/init.js                                             │
+│    pm2 restart yapi-backend                                       │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════
+  OTOMATİK YEDEKLEME (Automatic Backup)
+═══════════════════════════════════════════════════════════════════════════
+
+  Uygulama veritabanını günlük olarak otomatik yedeklemek için:
+
+  Windows (Görev Zamanlayıcı / Task Scheduler):
+    1. Görev Zamanlayıcı'yı açın.
+    2. Yeni bir görev oluşturun (Günlük, saat 03:00 gibi).
+    3. Eylem olarak 'backup/backup.bat' scriptini seçin.
+
+  Linux (Cron):
+    1. Terminale 'crontab -e' yazın.
+    2. En alta şu satırı ekleyin (Her gün gece 03:00'te çalışır):
+       0 3 * * * /home/user/api/backup/backup.sh >> /home/user/api/backup/backup.log 2>&1
+
+  Not: Scriptler 'backup/dailybackup/' klasörüne yedek alır ve 
+        son 30 günlük yedeği tutar, daha eskileri otomatik siler.
+
+
+═══════════════════════════════════════════════════════════════════════════
+  YEDEKLEME (Manuel)
+═══════════════════════════════════════════════════════════════════════════
+
+  Database yedeği (SQLite):
+    cp backend/data/database.sqlite backend/data/database.backup.sqlite
+
+  Tarihli yedek:
+    Linux/Mac:
+      cp backend/data/database.sqlite \
+         "backend/data/database.$(date +%Y%m%d_%H%M%S).sqlite"
+
+    Windows:
+      copy backend\data\database.sqlite ^
+           backend\data\database_%date:~-4,4%%date:~-7,2%%date:~-10,2%.sqlite
+
+
+═══════════════════════════════════════════════════════════════════════════
+  GÜNCELLEME
+═══════════════════════════════════════════════════════════════════════════
+
+  1. Yeni versiyonu indirin
+  2. Backend güncelleme:
+       cd backend
+       npm install
+       pm2 restart yapi-backend
+
+  3. Frontend güncelleme:
+       cd frontend
+       npm install
+       npm run build
+
+  4. Nginx yeniden yükle (varsa):
+       sudo systemctl reload nginx
+
+
+═══════════════════════════════════════════════════════════════════════════
+  GÜVENLİK KONTROL LİSTESİ
+═══════════════════════════════════════════════════════════════════════════
+
+  ☐ JWT_SECRET değiştirildi
+  ☐ CORS_ORIGIN production domain ile güncellendi
+  ☐ Default admin şifresi değiştirildi
+  ☐ HTTPS etkinleştirildi (SSL sertifikası)
+  ☐ Firewall yapılandırıldı (sadece 80, 443 portları açık)
+  ☐ Düzenli yedekleme ayarlandı
+  ☐ Rate limiting ayarları gözden geçirildi
+  ☐ PM2 startup script kuruldu
+
+
+═══════════════════════════════════════════════════════════════════════════
+  DESTEK VE DÖKÜMANTASYON
+═══════════════════════════════════════════════════════════════════════════
+
+  Detaylı Bilgi:
+    • README.md         - Genel bilgiler ve özellikler
+    • DEPLOYMENT.md     - Deployment rehberi (İngilizce)
+
+  Loglar:
+    • backend/logs/     - Uygulama logları
+    • pm2 logs          - PM2 logları
+
+  İletişim:
+    • Geliştirici: YASİN KELEŞ (Yapi)
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║  Başarılı kurulumlar dileriz!                                              ║
+║                                                                            ║
+║  Geliştirici: YASİN KELEŞ (Yapi)                                         ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
