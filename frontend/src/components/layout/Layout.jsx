@@ -12,6 +12,7 @@ import logoLight from '../../assets/logo2.png';
 
 import { hasPermissionSync, fetchRolePermissions } from '../../config/permissions';
 import axios from '../../services/api';
+import { listPages } from '../../services/pages';
 
 const Layout = () => {
   const { user, logout } = useAuth();
@@ -22,6 +23,7 @@ const Layout = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // Mobile menu state
   const [roles, setRoles] = useState([]);
+  const [userPages, setUserPages] = useState([]);
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -44,6 +46,24 @@ const Layout = () => {
     fetchRoles();
   }, []);
 
+  useEffect(() => {
+    const fetchPages = async () => {
+      try {
+        const { data } = await listPages({ status: 'published', limit: 50 });
+        const pages = (data.data || []).map((p) => ({
+          name: p.name,
+          path: `/admin/pages/${p.slug}`,
+          icon: 'bi bi-file-earmark'
+        }));
+        setUserPages(pages);
+      } catch (err) {
+        console.warn('Published pages could not be loaded for sidebar', err.message);
+        setUserPages([]);
+      }
+    };
+    fetchPages();
+  }, []);
+
   // Preload permissions on mount
   useEffect(() => {
     // Force refresh permissions when user role changes
@@ -56,36 +76,43 @@ const Layout = () => {
     return role?.display_name || roleName;
   };
 
+  const sellerMenu = [
+    { name: 'Storefront Designer', path: '/seller/storefront-designer', icon: 'bi bi-layout-text-window' },
+    { name: 'My Products', path: '/seller/products', icon: 'bi bi-box-seam' },
+    { name: 'Orders', path: '/seller/orders', icon: 'bi bi-receipt' },
+    { name: 'Campaigns', path: '/seller/campaigns', icon: 'bi bi-megaphone' },
+    { name: 'Analytics', path: '/seller/analytics', icon: 'bi bi-graph-up' }
+  ];
+
   const allNavigationGroups = [
     {
-      title: 'MAIN',
+      title: 'ADMIN',
       items: [
-        { name: 'Dashboard', path: '/', icon: 'bi bi-speedometer2' },
-        { name: 'Analytics', path: '/analytics', icon: 'bi bi-graph-up' },
+        { name: 'Dashboard', path: '/admin', icon: 'bi bi-speedometer2' },
+        { name: 'Analytics', path: '/admin/analytics', icon: 'bi bi-graph-up' },
+        { name: 'Data Sources', path: '/admin/data-sources', icon: 'bi bi-database' },
+        { name: 'API Endpoints', path: '/admin/api-endpoints', icon: 'bi bi-hdd-network' },
+        { name: 'API Keys', path: '/admin/api-keys', icon: 'bi bi-key' },
+        { name: 'Users', path: '/admin/users', icon: 'bi bi-people' },
+        { name: 'Roles', path: '/admin/roles', icon: 'bi bi-shield-lock' },
+        { name: 'Pages', path: '/admin/pages-builder', icon: 'bi bi-layout-text-window' },
+        { name: 'Page Builder (D&D)', path: '/admin/pages/new', icon: 'bi bi-ui-radios-grid' },
+        { name: 'Menus', path: '/admin/menus', icon: 'bi bi-list-ul' }
       ]
     },
     {
-      title: 'API',
-      items: [
-        { name: 'Data Sources', path: '/data-sources', icon: 'bi bi-database' },
-        { name: 'API Endpoints', path: '/api-endpoints', icon: 'bi bi-hdd-network' },
-        { name: 'API Keys', path: '/api-keys', icon: 'bi bi-key' },
-      ]
-    },
-    {
-      title: 'SYSTEM',
-      items: [
-        { name: 'Users', path: '/users', icon: 'bi bi-people' },
-        { name: 'Roles', path: '/roles', icon: 'bi bi-shield-lock' },
-      ]
+      title: 'END USER PAGES',
+      items: userPages.map(p => ({ ...p }))
     }
   ];
 
-  // Filter groups based on permissions
-  const navigationGroups = allNavigationGroups.map(group => ({
-    ...group,
-    items: group.items.filter(item => hasPermissionSync(user?.role, item.path))
-  })).filter(group => group.items.length > 0);
+  // Show seller-specific sidebar if seller
+  const navigationGroups = user?.role === 'seller'
+    ? [{ title: 'SELLER', items: sellerMenu }]
+    : allNavigationGroups.map(group => ({
+        ...group,
+        items: group.items.filter(item => hasPermissionSync(user?.role, item.path))
+      })).filter(group => group.items.length > 0);
 
   return (
     <div className="flex h-screen bg-dark-950 text-slate-100 overflow-hidden md:p-0">
@@ -137,7 +164,7 @@ const Layout = () => {
               )}
               <div className={`space-y-1 ${sidebarCollapsed ? 'md:px-3' : 'px-4'}`}>
                 {group.items.map((item) => {
-                  const isActive = location.pathname === item.path;
+                  const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
                   return (
                     <Link
                       key={item.path}
@@ -209,7 +236,7 @@ const Layout = () => {
             <h1 className="text-lg font-semibold text-white whitespace-nowrap overflow-hidden text-ellipsis">
               {navigationGroups
                 .flatMap(g => g.items)
-                .find(item => item.path === location.pathname)?.name || 'Dashboard'}
+                .find(item => location.pathname === item.path || location.pathname.startsWith(item.path + '/'))?.name || 'Dashboard'}
             </h1>
           </div>
 

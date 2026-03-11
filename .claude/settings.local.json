@@ -2,7 +2,19 @@
   "permissions": {
     "allow": [
       "Bash(python3 -c \":*)",
-      "Bash(python -c \"print\\(''python3 not available''\\)\")"
+      "Bash(python -c \"print\\(''python3 not available''\\)\")",
+      "Bash(npm run dev)",
+      "Bash(netstat -ano)",
+      "Bash(curl -L \"https://www.python.org/ftp/python/3.11.15/python-3.11.15-amd64.exe\" -o \"C:\\\\Temp\\\\python-3.11.15-amd64.exe\" --create-dirs)",
+      "Bash(curl -s \"https://www.python.org/ftp/python/3.11.15/\")",
+      "Bash(winget search:*)",
+      "Bash(nuget install:*)",
+      "Bash(find c:/api/backend -name requirements*.txt)",
+      "Bash(find c:/api -name requirements*.txt)",
+      "Bash(ls c:/api/backend/.env*)",
+      "Bash(node -e \"const crypto = require\\(''crypto''\\); console.log\\(''JWT_SECRET='' + crypto.randomBytes\\(64\\).toString\\(''hex''\\)\\); console.log\\(''REFRESH_TOKEN_SECRET='' + crypto.randomBytes\\(64\\).toString\\(''hex''\\)\\); console.log\\(''ENCRYPTION_KEY='' + crypto.randomBytes\\(32\\).toString\\(''hex''\\)\\); console.log\\(''ENCRYPTION_SALT='' + crypto.randomBytes\\(16\\).toString\\(''hex''\\)\\);\")",
+      "Bash(xargs grep:*)",
+      "Bash(find c:/api/frontend -name favicon* -o -name *.ico)"
     ]
   }
 }

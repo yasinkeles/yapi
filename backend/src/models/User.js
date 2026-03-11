@@ -9,10 +9,16 @@ const logger = require('../utils/logger').createModuleLogger('UserModel');
 const { NotFoundError, ConflictError, ValidationError } = require('../utils/errors');
 const { USER_ROLES } = require('../config/constants');
 
+const normalizeRole = (role) => {
+  if (role === USER_ROLES.DEVELOPER) return USER_ROLES.SELLER;
+  if (role === USER_ROLES.USER) return USER_ROLES.CUSTOMER;
+  return role;
+};
+
 class UserModel {
   async create(userData) {
     try {
-      const { username, email, password, role = USER_ROLES.DEVELOPER } = userData;
+      const { username, email, password, role = USER_ROLES.CUSTOMER } = userData;
 
       if (!username || !email || !password) {
         throw new ValidationError('Username, email, and password are required');
@@ -25,10 +31,12 @@ class UserModel {
 
       const passwordHash = await bcrypt.hash(password, 10);
 
+      const normalizedRole = normalizeRole(role);
+
       const result = await db.execute(`
         INSERT INTO users (username, email, password_hash, role, is_active)
         VALUES (?, ?, ?, ?, ?)
-      `, [username, email, passwordHash, role, 1]);
+      `, [username, email, passwordHash, normalizedRole, 1]);
 
       logger.info(`User created: ${username} (ID: ${result.lastInsertRowid})`);
 
@@ -44,6 +52,11 @@ class UserModel {
       const user = await db.queryOne('SELECT * FROM users WHERE id = ?', [id]);
 
       if (user) {
+        const mappedRole = normalizeRole(user.role);
+        if (mappedRole !== user.role) {
+          await db.execute('UPDATE users SET role = ? WHERE id = ?', [mappedRole, user.id]);
+          user.role = mappedRole;
+        }
         delete user.password_hash;
         delete user.two_factor_secret;
       }
@@ -120,6 +133,12 @@ class UserModel {
       if (!isValid) {
         logger.warn(`verifyPassword: Password mismatch for identifier: ${identifier}`);
         return null;
+      }
+
+      const mappedRole = normalizeRole(user.role);
+      if (mappedRole !== user.role) {
+        await db.execute('UPDATE users SET role = ? WHERE id = ?', [mappedRole, user.id]);
+        user.role = mappedRole;
       }
 
       await this.updateLastLogin(user.id);

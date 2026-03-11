@@ -33,7 +33,7 @@ const adminLimiter = rateLimit({
     );
   },
   skip: (req) => {
-    // Skip rate limiting for ALL authenticated users (admin, developer, user)
+    // Skip rate limiting for ALL authenticated users (admin, seller, customer)
     // We already know who they are, so we can trust them for admin operations.
     if (req.user) {
       return true;

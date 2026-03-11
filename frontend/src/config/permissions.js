@@ -46,10 +46,33 @@ export const fetchRolePermissions = async (forceRefresh = false) => {
         // Return default fallback permissions
         return {
             admin: ['*'],
-            developer: ['/', '/analytics', '/data-sources', '/api-endpoints', '/api-keys', '/profile'],
-            user: ['/', '/analytics', '/profile']
+            seller: [
+                '/seller/dashboard',
+                '/seller/profile',
+                '/seller/storefront-designer',
+                '/seller/products',
+                '/seller/orders',
+                '/seller/campaigns',
+                '/seller/analytics'
+            ],
+            customer: [
+                '/app/dashboard',
+                '/app/profile',
+                '/app/catalog',
+                '/app/cart',
+                '/app/orders'
+            ]
         };
     }
+};
+
+const pathAllowed = (allowed, path) => {
+    if (!allowed || allowed.length === 0) return false;
+    if (allowed.includes('*')) return true;
+    // Exact match
+    if (allowed.includes(path)) return true;
+    // Wildcard prefix support: entries ending with /* match path prefix
+    return allowed.some((entry) => entry.endsWith('/*') && path.startsWith(entry.slice(0, -2)));
 };
 
 /**
@@ -59,15 +82,9 @@ export const fetchRolePermissions = async (forceRefresh = false) => {
  */
 export const hasPermission = async (role, path) => {
     if (!role) return false;
-    
     const permissions = await fetchRolePermissions();
     const allowed = permissions[role] || [];
-    
-    // Check for wildcard permission (admin)
-    if (allowed.includes('*')) return true;
-    
-    // Check if path is in allowed list
-    return allowed.includes(path);
+    return pathAllowed(allowed, path);
 };
 
 /**
@@ -76,31 +93,32 @@ export const hasPermission = async (role, path) => {
  */
 export const hasPermissionSync = (role, path) => {
     if (!role) return false;
-    
-    if (!permissionsCache) {
-        // Fallback to basic permissions if cache not loaded
-        const fallback = {
-            admin: ['*'],
-            developer: ['/', '/analytics', '/data-sources', '/api-endpoints', '/api-keys', '/profile'],
-            user: ['/', '/analytics', '/profile']
-        };
-        const allowed = fallback[role] || [];
-        if (allowed.includes('*')) return true;
-        return allowed.includes(path);
-    }
-    
-    const allowed = permissionsCache[role] || [];
-    
-    // Check for wildcard permission (admin)
-    if (allowed.includes('*')) return true;
-    
-    // Check if path is in allowed list
-    return allowed.includes(path);
+    const fallback = {
+        admin: ['*'],
+        seller: [
+            '/seller/dashboard',
+            '/seller/profile',
+            '/seller/storefront-designer',
+            '/seller/products',
+            '/seller/orders',
+            '/seller/campaigns',
+            '/seller/analytics'
+        ],
+        customer: [
+            '/app/dashboard',
+            '/app/profile',
+            '/app/catalog',
+            '/app/cart',
+            '/app/orders'
+        ]
+    };
+    const allowed = (permissionsCache && permissionsCache[role]) || fallback[role] || [];
+    return pathAllowed(allowed, path);
 };
 
 // Export for backward compatibility
 export const ROLES = {
     ADMIN: 'admin',
-    DEVELOPER: 'developer',
-    USER: 'user'
+    SELLER: 'seller',
+    CUSTOMER: 'customer'
 };

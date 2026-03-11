@@ -14,14 +14,15 @@ const getApiBaseUrl = () => {
   }
 
   // In development, use relative URLs to go through Vite proxy
+  // In production, prefer VITE_API_URL if set; otherwise same origin
   if (import.meta.env.DEV) {
     return ''; // Empty string = relative URLs
   }
 
-  // In production, use current hostname with backend port
   const hostname = window.location.hostname;
   const protocol = window.location.protocol;
-  return `${protocol}//${hostname}:3000`;
+  const port = window.location.port ? `:${window.location.port}` : '';
+  return `${protocol}//${hostname}${port || ':3000'}`;
 };
 
 const API_BASE_URL = getApiBaseUrl();
@@ -94,10 +95,16 @@ api.interceptors.response.use(
     }
 
     // If 403 and Two-Factor is required
-    if (error.response?.status === 403 && 
-        error.response?.data?.error?.code === 'TWO_FACTOR_REQUIRED' &&
-        !window.location.pathname.includes('/profile')) {
-      window.location.href = '/profile?2fa_required=true';
+    if (
+      error.response?.status === 403 &&
+      error.response?.data?.error?.code === 'TWO_FACTOR_REQUIRED' &&
+      !window.location.pathname.includes('/profile')
+    ) {
+      // Sadece admin kullanıcıları için yönlendir
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (user.role === 'admin') {
+        window.location.href = '/profile?2fa_required=true';
+      }
       return Promise.reject(error);
     }
 

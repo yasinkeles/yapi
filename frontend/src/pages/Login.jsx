@@ -12,6 +12,7 @@ import logoLight from '../assets/logo2.png';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [roleHint, setRoleHint] = useState('');
   const [twoFactorCode, setTwoFactorCode] = useState('');
   const [show2FA, setShow2FA] = useState(false);
   const [useBackupCode, setUseBackupCode] = useState(false);
@@ -29,7 +30,7 @@ const Login = () => {
 
     try {
       // If showing 2FA, send code. If not, send empty string (backend ignores undefined)
-      const result = await login(username, password, show2FA ? twoFactorCode : undefined);
+      const result = await login(username, password, show2FA ? twoFactorCode : undefined, roleHint || undefined);
 
       if (result.require2fa) {
         setShow2FA(true);
@@ -37,7 +38,14 @@ const Login = () => {
         return;
       }
 
-      navigate('/');
+      const resolvedRole = roleHint || result.user?.role;
+      if (resolvedRole === 'admin' || resolvedRole === 'developer') {
+        navigate('/admin');
+      } else if (resolvedRole === 'seller') {
+        navigate('/seller');
+      } else {
+        navigate('/app');
+      }
     } catch (err) {
       console.error('Login error caught:', err);
       const errorMessage = err.response?.data?.error?.message ||
@@ -113,6 +121,22 @@ const Login = () => {
                     placeholder="Enter your password"
                     required
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">
+                    Role
+                  </label>
+                  <select
+                    value={roleHint}
+                    onChange={(e) => setRoleHint(e.target.value)}
+                    className="input w-full bg-dark-800"
+                  >
+                    <option value="">Auto (from account)</option>
+                    <option value="admin">Admin</option>
+                    <option value="seller">Seller</option>
+                    <option value="customer">Customer</option>
+                  </select>
                 </div>
               </>
             ) : (

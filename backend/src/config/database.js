@@ -12,6 +12,8 @@ const logger = require('../utils/logger').createModuleLogger('Database');
 // Configure pg to return numeric types as numbers instead of strings
 types.setTypeParser(20, (val) => parseInt(val, 10));   // int8 / bigint (used by COUNT)
 types.setTypeParser(1700, (val) => parseFloat(val));   // numeric (used by AVG, SUM)
+types.setTypeParser(114, (val) => (val === null ? null : JSON.parse(val))); // json
+types.setTypeParser(3802, (val) => (val === null ? null : JSON.parse(val))); // jsonb
 
 class DatabaseManager {
   constructor() {
@@ -57,7 +59,28 @@ class DatabaseManager {
       }
 
       const schema = fs.readFileSync(schemaPath, 'utf8');
-      await this.pool.query(schema);
+      const statements = schema
+        .split(/;\s*\n/)
+        .map((stmt) => stmt.trim())
+        .filter(Boolean);
+
+      const ignoreCodes = new Set(['42P07', '42710', '42701', '42704']); // duplicate table/constraint/column/not found
+
+      for (const statement of statements) {
+        try {
+          await this.pool.query(statement);
+        } catch (err) {
+          if (ignoreCodes.has(err.code)) {
+            logger.warn('Migration skipped (already exists or safe to ignore)', {
+              code: err.code,
+              detail: err.detail,
+              statement: statement.slice(0, 120)
+            });
+            continue;
+          }
+          throw err;
+        }
+      }
 
       logger.info('Database schema created/updated successfully');
     } catch (error) {

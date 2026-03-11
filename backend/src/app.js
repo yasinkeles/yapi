@@ -7,6 +7,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
+const path = require('path');
 const config = require('./config/environment');
 const logger = require('./utils/logger');
 const { requestLogger } = require('./middleware/requestLogger');
@@ -43,6 +44,9 @@ app.use(compression());
 // Body parsers
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Static uploads
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Request logging
 app.use(requestLogger);

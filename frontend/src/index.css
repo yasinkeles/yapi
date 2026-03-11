@@ -17,16 +17,16 @@
     --color-light-300: #d6d3d1;
   }
 
-  /* Dark theme (default) */
+  /* Light theme (default) */
   body {
-    @apply bg-black text-slate-100 font-sans antialiased transition-colors duration-300;
-    background-color: var(--color-dark-950);
+    @apply text-slate-900 font-sans antialiased transition-colors duration-300;
+    background-color: #ffffff;
   }
 
-  /* Light theme */
-  .light body {
-    @apply text-slate-900;
-    background-color: #ffffff;
+  /* Dark theme */
+  .dark body {
+    @apply text-slate-100;
+    background-color: var(--color-dark-950);
   }
 }
 
@@ -81,11 +81,11 @@
   }
 
   .btn-primary {
-    @apply bg-teal-700 hover:bg-teal-600 text-white shadow-sm shadow-teal-900/10 border border-transparent;
+    @apply bg-emerald-300 hover:bg-emerald-200 text-slate-900 shadow-sm shadow-emerald-500/30 border border-emerald-400;
   }
 
   .btn-secondary {
-    @apply bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700;
+    @apply bg-sky-200 hover:bg-sky-100 text-slate-900 border border-sky-300 shadow-sm shadow-sky-500/20;
   }
 
   /* Inputs */
@@ -102,7 +102,7 @@
   }
 
   .light .btn-secondary {
-    @apply bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300;
+    @apply bg-sky-100 hover:bg-sky-50 text-slate-900 border-sky-200 shadow-sm;
   }
 }
 
@@ -241,12 +241,6 @@
   @apply shadow-md border-gray-300;
 }
 
-.light .card .text-white {
-  color: #111827;
-  /* gray-900 */
-  font-weight: 500;
-  /* font-medium */
-}
 
 .light h1,
 .light h2,
@@ -257,35 +251,33 @@
   @apply text-gray-900 font-bold tracking-tight;
 }
 
-/* Global text contrast fix */
-.light .text-white {
-  color: #111827 !important;
-  /* gray-900 */
-}
 
-/* Keep white text on primary actions */
+/* Keep pastel buttons readable in light mode */
 .light .btn-primary {
   @apply font-semibold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5;
-  color: #ffffff;
-  background-color: #0d9488;
-  /* teal-600 */
+  color: #0f172a;
+  background-color: #a7f3d0;
+  /* emerald-200 */
+  border-color: #34d399;
+  /* emerald-400 */
 }
 
 .light .btn-primary:hover {
-  background-color: #0f766e;
-  /* teal-700 */
+  background-color: #6ee7b7;
+  /* emerald-300 */
 }
 
-/* Ensure text inside buttons stays white */
-.light .bg-teal-700 *,
-.light .bg-teal-600 *,
-.light .btn-primary * {
-  color: #ffffff !important;
+/* Ensure button content keeps dark text on pastel backgrounds */
+.btn-primary *,
+.btn-secondary *,
+.light .btn-primary *,
+.light .btn-secondary * {
+  color: #0f172a !important;
 }
 
 /* Secondary Buttons */
 .light .btn-secondary {
-  @apply bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400 shadow-sm;
+  @apply bg-sky-100 text-gray-800 border border-sky-200 hover:bg-sky-50 hover:text-gray-900 hover:border-sky-300 shadow-sm;
 }
 
 /* Inputs */
@@ -398,20 +390,21 @@
 
 /* Fix Button Contrast in Light Mode */
 .light .btn-primary {
-  background-color: #0d9488 !important;
-  /* teal-600 */
-  color: #ffffff !important;
+  background-color: #a7f3d0 !important;
+  /* emerald-200 */
+  color: #0f172a !important;
+  border-color: #34d399 !important;
 }
 
 .light .btn-primary:hover {
-  background-color: #0f766e !important;
-  /* teal-700 */
+  background-color: #6ee7b7 !important;
+  /* emerald-300 */
 }
 
 /* Ensure secondary text is dark in light mode */
 .light .btn-secondary {
-  background-color: #ffffff;
-  color: #374151 !important;
-  /* gray-700 */
-  border-color: #d1d5db;
+  background-color: #e0f2fe;
+  /* sky-100 */
+  color: #0f172a !important;
+  border-color: #bae6fd;
 }

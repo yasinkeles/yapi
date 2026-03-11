@@ -18,6 +18,31 @@ export default defineConfig({
         target: 'http://127.0.0.1:3000',
         changeOrigin: true
       },
+      // Public page runtime (for /p/:slug view)
+      '/pages': {
+        target: 'http://127.0.0.1:3000',
+        changeOrigin: true
+      },
+      '/store': {
+        target: 'http://127.0.0.1:3000',
+        changeOrigin: true
+      },
+      '/seller': {
+        target: 'http://127.0.0.1:3000',
+        changeOrigin: true
+      },
+      '/cart': {
+        target: 'http://127.0.0.1:3000',
+        changeOrigin: true
+      },
+      '/addresses': {
+        target: 'http://127.0.0.1:3000',
+        changeOrigin: true
+      },
+      '/orders': {
+        target: 'http://127.0.0.1:3000',
+        changeOrigin: true
+      },
       // Server info endpoint
       '/server-info': {
         target: 'http://127.0.0.1:3000',

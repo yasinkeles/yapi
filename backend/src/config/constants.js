@@ -32,8 +32,8 @@ module.exports = {
   // User Roles
   USER_ROLES: {
     ADMIN: 'admin',
-    DEVELOPER: 'developer',
-    VIEWER: 'viewer'
+    SELLER: 'seller',
+    CUSTOMER: 'customer'
   },
 
   // API Key Prefixes

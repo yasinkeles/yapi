@@ -243,7 +243,11 @@ export default function Profile() {
         }
     };
 
-    const is2FARequired = new URLSearchParams(window.location.search).get('2fa_required') && (!freshUser || !freshUser.two_factor_enabled);
+        const is2FARequired =
+            new URLSearchParams(window.location.search).get('2fa_required') &&
+            freshUser &&
+            freshUser.role === 'admin' &&
+            !freshUser.two_factor_enabled;
 
     return (
         <div>

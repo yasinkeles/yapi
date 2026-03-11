@@ -9,10 +9,15 @@ const User = require('../src/models/User');
         const user = await User.findByUsername('admin');
         if (!user) {
             console.log("User admin not found, creating...");
-            await User.create({ username: 'admin', password: 'admin', email: 'admin@example.com' });
+            await User.create({
+                username: 'admin',
+                password: 'admin123!',
+                email: 'admin@local',
+                role: 'admin'
+            });
         } else {
-            console.log("Updating admin password...");
-            await User.update(user.id, { password: 'admin' }); // hashes automatically
+            console.log("Updating admin password and role...");
+            await User.update(user.id, { password: 'admin123!', role: 'admin', email: 'admin@local' }); // hashes automatically
         }
         console.log("DONE");
 

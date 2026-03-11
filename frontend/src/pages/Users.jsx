@@ -21,7 +21,7 @@ const Users = () => {
     username: '',
     email: '',
     password: '',
-    role: 'developer'
+    role: 'customer'
   });
 
   const [editUserForm, setEditUserForm] = useState({
@@ -66,7 +66,7 @@ const Users = () => {
     try {
       await axios.post('/admin/users', newUserForm);
       setShowAddModal(false);
-      setNewUserForm({ username: '', email: '', password: '', role: 'developer' });
+      setNewUserForm({ username: '', email: '', password: '', role: 'customer' });
       fetchUsers();
       alert('User created successfully');
     } catch (err) {

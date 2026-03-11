@@ -9,11 +9,12 @@ const authService = {
   /**
    * Login user
    */
-  async login(username, password, twoFactorCode) {
+  async login(username, password, twoFactorCode, role) {
     const { data } = await api.post('/admin/auth/login', {
       username,
       password,
-      twoFactorCode
+      twoFactorCode,
+      role
     });
 
     if (data.require2fa) {
