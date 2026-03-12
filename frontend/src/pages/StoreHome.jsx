@@ -21,7 +21,7 @@ const StoreHome = () => {
           fetchProducts({ limit: 8 }),
           fetchCategories(),
         ]);
-        setNewArrivals(prodRes.data?.data || []);
+        setNewArrivals(prodRes.data?.data?.data || prodRes.data?.data || []);
         setCategories(catRes.data?.data || []);
         setError(null);
       } catch (err) {

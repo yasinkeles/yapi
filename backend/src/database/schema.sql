@@ -620,25 +620,6 @@ CREATE TABLE IF NOT EXISTS seller_card_styles (
 
 CREATE INDEX IF NOT EXISTS idx_seller_card_styles_store_id ON seller_card_styles(store_id);
 
-INSERT INTO categories (name, slug)
-SELECT 'Electronics', 'electronics'
-WHERE NOT EXISTS (SELECT 1 FROM categories WHERE slug = 'electronics');
-
-INSERT INTO categories (name, slug)
-SELECT 'Home', 'home'
-WHERE NOT EXISTS (SELECT 1 FROM categories WHERE slug = 'home');
-
-INSERT INTO categories (name, slug)
-SELECT 'Fashion', 'fashion'
-WHERE NOT EXISTS (SELECT 1 FROM categories WHERE slug = 'fashion');
-
-INSERT INTO categories (name, slug)
-SELECT 'Sports', 'sports'
-WHERE NOT EXISTS (SELECT 1 FROM categories WHERE slug = 'sports');
-
-INSERT INTO categories (name, slug)
-SELECT 'Books', 'books'
-WHERE NOT EXISTS (SELECT 1 FROM categories WHERE slug = 'books');
 
 
 -- ============================================

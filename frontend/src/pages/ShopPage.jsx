@@ -55,8 +55,8 @@ const ShopPage = () => {
         limit,
         search,
       });
-      setProducts(data?.data || []);
-      setTotal(data?.total || 0);
+      setProducts(data?.data?.data || []);
+      setTotal(data?.data?.total || 0);
     } catch (err) {
       setError(err.response?.data?.error?.message || err.message);
     } finally {

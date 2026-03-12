@@ -45,10 +45,6 @@ const StoreLayout = () => {
             >
               <option value="tr">🇹🇷 TR</option>
               <option value="en">🇬🇧 EN</option>
-              <option value="ru">🇷🇺 RU</option>
-              <option value="az">🇦🇿 AZ</option>
-              <option value="fa">🇮🇷 FA</option>
-              <option value="ar">🇸🇦 AR</option>
             </select>
 
             {user?.role === "customer" ? (

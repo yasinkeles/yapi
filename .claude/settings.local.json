@@ -14,7 +14,14 @@
       "Bash(ls c:/api/backend/.env*)",
       "Bash(node -e \"const crypto = require\\(''crypto''\\); console.log\\(''JWT_SECRET='' + crypto.randomBytes\\(64\\).toString\\(''hex''\\)\\); console.log\\(''REFRESH_TOKEN_SECRET='' + crypto.randomBytes\\(64\\).toString\\(''hex''\\)\\); console.log\\(''ENCRYPTION_KEY='' + crypto.randomBytes\\(32\\).toString\\(''hex''\\)\\); console.log\\(''ENCRYPTION_SALT='' + crypto.randomBytes\\(16\\).toString\\(''hex''\\)\\);\")",
       "Bash(xargs grep:*)",
-      "Bash(find c:/api/frontend -name favicon* -o -name *.ico)"
+      "Bash(find c:/api/frontend -name favicon* -o -name *.ico)",
+      "Read(//c/Users/Administrator/Desktop/**)",
+      "Read(//c/Users/**)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(''''Top keys:'''', list\\(d.keys\\(\\)\\)[:5]\\)\")",
+      "Bash(node -e \":*)",
+      "Bash(find c:/api/backend -name *.js)",
+      "Bash(PGPASSWORD=123456 psql -h 192.168.0.61 -U postgres -d yapi -c \"SELECT id, name, slug FROM categories ORDER BY id LIMIT 30;\")",
+      "Bash(node scripts/import-products.js)"
     ]
   }
 }
