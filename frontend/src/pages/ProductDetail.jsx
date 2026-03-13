@@ -110,8 +110,11 @@ const ProductDetail = () => {
                 <img
                   src={getImgSrc(images[activeImage])}
                   alt={product.name}
-                  className="w-full max-h-[440px] object-contain transition-all duration-300"
-                  onError={e => { e.currentTarget.src = "https://via.placeholder.com/400x400?text=Görsel+Yok"; }}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full max-h-[440px] object-contain transition-opacity duration-300 opacity-0"
+                  onLoad={(e) => e.currentTarget.classList.replace("opacity-0", "opacity-100")}
+                  onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/400x400?text=Görsel+Yok"; e.currentTarget.classList.replace("opacity-0", "opacity-100"); }}
                 />
               ) : (
                 <div className="flex flex-col items-center gap-2 text-slate-300">
@@ -131,7 +134,7 @@ const ProductDetail = () => {
                       borderColor: idx === activeImage ? "#233d7d" : "rgba(0,0,0,0.08)",
                       boxShadow: idx === activeImage ? "0 0 0 3px rgba(35,61,125,0.15)" : "none",
                     }}>
-                    <img src={getImgSrc(img)} alt="" className="w-full h-full object-cover" />
+                    <img src={getImgSrc(img)} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover transition-opacity duration-200 opacity-0" onLoad={(e) => e.currentTarget.classList.replace("opacity-0","opacity-100")} onError={(e) => e.currentTarget.classList.replace("opacity-0","opacity-100")} />
                   </button>
                 ))}
               </div>
@@ -269,34 +272,36 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* ── Description & Specs ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-2 space-y-4">
+      {/* ── Description & Specs side by side ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-          <div className="bg-white rounded-2xl overflow-hidden"
-            style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04)" }}>
-            <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2.5">
-              <span className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#eef2fb" }}>
-                <i className="bi bi-file-text-fill text-xs" style={{ color: "#233d7d" }} />
-              </span>
-              <h3 className="font-bold text-slate-800">{t("description")}</h3>
-            </div>
-            <div className="px-6 py-5">
-              <p className="text-slate-600 text-sm leading-relaxed whitespace-pre-line">
-                {product.description || <span className="text-slate-400 italic">{t("noDescription")}</span>}
-              </p>
-            </div>
+        {/* Description */}
+        <div className="bg-white rounded-2xl overflow-hidden flex flex-col"
+          style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04)" }}>
+          <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2.5">
+            <span className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#eef2fb" }}>
+              <i className="bi bi-file-text-fill text-xs" style={{ color: "#233d7d" }} />
+            </span>
+            <h3 className="font-bold text-slate-800">{t("description")}</h3>
           </div>
+          <div className="px-6 py-5 flex-1">
+            <p className="text-slate-600 text-sm leading-relaxed whitespace-pre-line">
+              {product.description || <span className="text-slate-400 italic">{t("noDescription")}</span>}
+            </p>
+          </div>
+        </div>
 
-          {Object.keys(specsByGroup).length > 0 && (
-            <div className="bg-white rounded-2xl overflow-hidden"
-              style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04)" }}>
-              <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2.5">
-                <span className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#eef2fb" }}>
-                  <i className="bi bi-list-check text-xs" style={{ color: "#233d7d" }} />
-                </span>
-                <h3 className="font-bold text-slate-800">{t("technicalSpecifications")}</h3>
-              </div>
+        {/* Technical Specifications */}
+        <div className="bg-white rounded-2xl overflow-hidden flex flex-col"
+          style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04)" }}>
+          <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2.5">
+            <span className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#eef2fb" }}>
+              <i className="bi bi-list-check text-xs" style={{ color: "#233d7d" }} />
+            </span>
+            <h3 className="font-bold text-slate-800">{t("technicalSpecifications")}</h3>
+          </div>
+          {Object.keys(specsByGroup).length > 0 ? (
+            <div className="flex-1">
               {Object.entries(specsByGroup).map(([group, specs]) => (
                 <div key={group}>
                   <div className="px-6 py-2 bg-slate-50 border-y border-slate-100">
@@ -312,35 +317,11 @@ const ProductDetail = () => {
                 </div>
               ))}
             </div>
-          )}
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-4">
-          {[
-            { icon: "bi-truck", title: t("delivery"), items: [{ icon: "bi-lightning-fill", text: t("fastShipping") }, { icon: "bi-arrow-return-left", text: t("easyReturns") }] },
-            { icon: "bi-shield-check", title: t("securePayment"), items: [{ icon: "bi-lock-fill", text: t("secureCheckout") }, { icon: "bi-credit-card-fill", text: t("multiplePaymentOptions") }] },
-          ].map(({ icon, title, items }) => (
-            <div key={title} className="bg-white rounded-2xl overflow-hidden"
-              style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04)" }}>
-              <div className="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2.5">
-                <span className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#eef2fb" }}>
-                  <i className={`bi ${icon} text-xs`} style={{ color: "#233d7d" }} />
-                </span>
-                <h3 className="font-bold text-slate-800">{title}</h3>
-              </div>
-              <ul className="px-5 py-4 space-y-3">
-                {items.map(({ icon: iIcon, text }) => (
-                  <li key={text} className="flex items-center gap-3 text-sm text-slate-600">
-                    <span className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 bg-slate-50">
-                      <i className={`bi ${iIcon} text-xs`} style={{ color: "#233d7d" }} />
-                    </span>
-                    {text}
-                  </li>
-                ))}
-              </ul>
+          ) : (
+            <div className="flex-1 flex items-center justify-center px-6 py-8">
+              <span className="text-slate-400 italic text-sm">{t("noDescription")}</span>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

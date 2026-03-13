@@ -4,8 +4,8 @@ const cartController = require('../controllers/cart.controller');
 
 const auth = require('../middleware/auth');
 
-// Require authentication and customer role for all cart routes
-router.use(auth.verifyToken, auth.requireRole(['customer']));
+// Require authentication for all cart routes (any role can shop)
+router.use(auth.verifyToken);
 
 router.get('/', cartController.getCart);
 router.post('/add', cartController.addItem);

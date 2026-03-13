@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import ProductImageSlider from "./ProductImageSlider";
 import { useLanguage } from "../../context/LanguageContext";
 
 const ProductCard = ({ product }) => {
@@ -7,12 +6,8 @@ const ProductCard = ({ product }) => {
 
   if (!product) return null;
 
-  const images =
-    product.images && product.images.length
-      ? product.images
-      : product.mainImage
-        ? [{ imageUrl: product.mainImage }]
-        : [];
+  const mainImage = product.mainImage
+    || (product.images && product.images.length ? (product.images[0]?.imageUrl || product.images[0]) : null);
 
   const hasCampaign =
     product.campaignPrice !== null &&
@@ -40,7 +35,17 @@ const ProductCard = ({ product }) => {
     >
       {/* Image area */}
       <div className="relative p-3 pb-0">
-        <ProductImageSlider images={images} heightClass="h-44" alt={product.name} />
+        <div className="h-44 w-full rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden">
+          <img
+            src={mainImage || "https://via.placeholder.com/400x300?text=Görsel+Yok"}
+            alt={product.name}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-contain p-2 transition-opacity duration-300 opacity-0"
+            onLoad={(e) => e.currentTarget.classList.replace("opacity-0", "opacity-100")}
+            onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/400x300?text=Görsel+Yok"; e.currentTarget.classList.replace("opacity-0", "opacity-100"); }}
+          />
+        </div>
 
         {/* Discount badge */}
         {hasCampaign && discount > 0 && (

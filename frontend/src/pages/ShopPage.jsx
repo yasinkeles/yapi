@@ -11,10 +11,10 @@ import { fetchCatalogProducts } from "../services/products";
 import { useLanguage } from "../context/LanguageContext";
 
 const SORT_OPTIONS = [
-  { label: "Newest", value: "newest" },
-  { label: "Price: Low → High", value: "price_asc" },
-  { label: "Price: High → Low", value: "price_desc" },
-  { label: "Name A–Z", value: "name_asc" },
+  { labelKey: "newest", value: "newest" },
+  { labelKey: "priceLowToHigh", value: "price_asc" },
+  { labelKey: "priceHighToLow", value: "price_desc" },
+  { labelKey: "nameAZ", value: "name_asc" },
 ];
 
 const ShopPage = () => {
@@ -32,7 +32,7 @@ const ShopPage = () => {
   const sort = searchParams.get("sort") || "newest";
   const page = parseInt(searchParams.get("page") || "1", 10);
   const search = searchParams.get("search") || "";
-  const limit = 12;
+  const limit = 20;
 
   const setParam = (key, value) => {
     setSearchParams((prev) => {
@@ -81,7 +81,7 @@ const ShopPage = () => {
           }}
           className="flex gap-2 w-full sm:w-auto"
         >
-          <div className="relative flex-1 sm:w-64">
+          <div className="relative flex-1 sm:w-80">
             <i className="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
             <input
               type="text"
@@ -110,7 +110,7 @@ const ShopPage = () => {
           >
             {SORT_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
-                {t(o.label)}
+                {t(o.labelKey)}
               </option>
             ))}
           </select>
@@ -140,7 +140,7 @@ const ShopPage = () => {
       )}
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {Array.from({ length: 12 }).map((_, i) => (
             <div
               key={i}
@@ -167,7 +167,7 @@ const ShopPage = () => {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
@@ -176,31 +176,70 @@ const ShopPage = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 pt-4">
+        <div className="flex items-center justify-center gap-1.5 pt-4 flex-wrap">
+          {/* First */}
+          <button
+            disabled={page <= 1}
+            onClick={() => setParam("page", "1")}
+            className="px-2.5 py-1.5 text-sm border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+            title="İlk sayfa"
+          >
+            <i className="bi bi-chevron-double-left"></i>
+          </button>
+          {/* Prev */}
           <button
             disabled={page <= 1}
             onClick={() => setParam("page", String(page - 1))}
-            className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-2.5 py-1.5 text-sm border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <i className="bi bi-chevron-left"></i>
           </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1)
-            .filter((p) => Math.abs(p - page) <= 2)
-            .map((p) => (
-              <button
-                key={p}
-                onClick={() => setParam("page", String(p))}
-                className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${p === page ? "bg-[#233d7d] text-white font-semibold" : "border border-slate-300 text-slate-600 hover:bg-slate-50"}`}
-              >
-                {p}
-              </button>
-            ))}
+
+          {/* Page numbers with ellipsis */}
+          {(() => {
+            const pages = [];
+            const delta = 2;
+            const left = Math.max(2, page - delta);
+            const right = Math.min(totalPages - 1, page + delta);
+
+            pages.push(1);
+            if (left > 2) pages.push("...");
+            for (let i = left; i <= right; i++) pages.push(i);
+            if (right < totalPages - 1) pages.push("...");
+            if (totalPages > 1) pages.push(totalPages);
+
+            return pages.map((p, i) =>
+              p === "..." ? (
+                <span key={`ellipsis-${i}`} className="px-2 py-1.5 text-sm text-slate-400">…</span>
+              ) : (
+                <button
+                  key={p}
+                  onClick={() => setParam("page", String(p))}
+                  className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${p === page ? "text-white font-semibold" : "border border-slate-300 text-slate-600 hover:bg-slate-50"}`}
+                  style={p === page ? { backgroundColor: "#233d7d" } : {}}
+                >
+                  {p}
+                </button>
+              )
+            );
+          })()}
+
+          {/* Next */}
           <button
             disabled={page >= totalPages}
             onClick={() => setParam("page", String(page + 1))}
-            className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-2.5 py-1.5 text-sm border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <i className="bi bi-chevron-right"></i>
+          </button>
+          {/* Last */}
+          <button
+            disabled={page >= totalPages}
+            onClick={() => setParam("page", String(totalPages))}
+            className="px-2.5 py-1.5 text-sm border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+            title="Son sayfa"
+          >
+            <i className="bi bi-chevron-double-right"></i>
           </button>
         </div>
       )}

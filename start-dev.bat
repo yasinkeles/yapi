@@ -23,3 +23,4 @@ echo Backend: http://%localIp%:3000
 echo Frontend: http://%localIp%:5173
 echo.
 pause
+pause

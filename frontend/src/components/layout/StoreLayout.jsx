@@ -31,7 +31,7 @@ const StoreLayout = () => {
   return (
     <div className="min-h-screen text-slate-900" style={{ backgroundColor: "#f0f2f7" }}>
       <header className="border-b border-slate-200 bg-white sticky top-0 z-20 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between gap-4">
           <Link to="/">
             <img src={logoImg} alt="Logo" className="h-10 object-contain" />
           </Link>
@@ -78,12 +78,12 @@ const StoreLayout = () => {
       </header>
 
       {isProductRoute ? (
-        <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="max-w-[1400px] mx-auto px-6 py-6">
           <Outlet />
         </div>
       ) : (
-        <div className="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-4 gap-6">
-          <aside className="md:col-span-1 bg-white rounded-xl p-4 space-y-2 sticky md:top-20 h-fit" style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.06)" }}>
+        <div className="max-w-[1400px] mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6">
+          <aside className="bg-white rounded-xl p-4 space-y-2 sticky lg:top-20 h-fit" style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.06)" }}>
             <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
               {t("categories")}
             </h2>
@@ -118,7 +118,7 @@ const StoreLayout = () => {
             )}
           </aside>
 
-          <main className="md:col-span-3">
+          <main className="min-w-0">
             <Outlet />
           </main>
         </div>
